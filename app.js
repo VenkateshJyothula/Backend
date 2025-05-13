@@ -10,9 +10,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors({
-  origin: 'http://localhost:3000',  // Replace with your frontend's URL
-}));
+app.use(cors());
 
 
 mongoose.connect(process.env.URL, {
