@@ -43,14 +43,17 @@ userSchema.statics.register=async function (name,email,password)
       };
       if(!validator.isStrongPassword(password,options))
       {
-        throw new Error("Invalid password");
+        throw new Error("Password Should contain atleast 8 characters");
         
       }
-
+      const user=await this.find({email});
+      if(user)
+      {
+        throw new Error("Mail already registered");
+      }
       const saltRounds=10;
       const hash=await bcrypt.hash(password,saltRounds);
       const newUser=new this({name,email,password:hash})
-      console.log(newUser);
       try {
         const resDB=await newUser.save();
         return resDB;
@@ -59,7 +62,7 @@ userSchema.statics.register=async function (name,email,password)
       }
     } 
     catch (error) {
-      throw new Error(error);
+      throw new Error(error.message);
     }
 }
 
