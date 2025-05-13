@@ -46,16 +46,16 @@ userSchema.statics.register=async function (name,email,password)
         throw new Error("Password Should contain atleast 8 characters");
         
       }
-      const user=await this.find({email});
+      const user=await this.findOne({email});
       if(user)
       {
         throw new Error("Mail already registered");
       }
-      const saltRounds=10;
-      const hash=await bcrypt.hash(password,saltRounds);
-      const newUser=new this({name,email,password:hash})
       try {
-        const resDB=await newUser.save();
+        const saltRounds=10;
+        const hash=await bcrypt.hash(password,saltRounds);
+        const newUser = new this({ name, email, password: hash });
+        const resDB = await newUser.save();
         return resDB;
       } catch (error) {
         throw new Error("Failed to Register User");
