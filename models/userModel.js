@@ -51,11 +51,15 @@ userSchema.statics.register=async function (name,email,password)
       const hash=await bcrypt.hash(password,saltRounds);
       const newUser=new this({name,email,password:hash})
       console.log(newUser);
-      const resDB=await newUser.save();
-      return resDB;
+      try {
+        const resDB=await newUser.save();
+        return resDB;
+      } catch (error) {
+        throw new Error("Failed to Register User");
+      }
     } 
     catch (error) {
-      throw new Error("Failed to create User "+error.name);
+      throw new Error(error);
     }
 }
 
